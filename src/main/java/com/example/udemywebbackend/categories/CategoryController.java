@@ -1,11 +1,11 @@
 package com.example.udemywebbackend.categories;
 
-import com.example.udemywebbackend.admin.Exception.CategoryNotFoundException;
+import com.example.udemywebbackend.Exception.CategoryNotFoundException;
 import com.example.udemywebbackend.admin.Upload.AWS.AmazoneS3Util;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +27,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/categoriesmanager")
+    @PreAuthorize("hasRole('Admin')")
     public String CategoryPage(ModelMap modelMap){
 
         return listCateByPage(modelMap,1,"name","asc",null);
@@ -34,7 +35,7 @@ public class CategoryController {
 
     @GetMapping("/categoriesmanager/page/{pageNum}")
     public String listCateByPage(ModelMap modelMap, @PathVariable("pageNum") int pageNum,
-                                 @Param("sortField") String sortField, @Param("sortDir") String sortDir
+                                 @Param("sortField") String sortField, @Param("sortDir") String sortDir,
                                  @Param("keyword") String keyword){
 
         if(sortDir == null || sortDir.isEmpty()){
@@ -42,7 +43,7 @@ public class CategoryController {
         }
 
         PageCategoryInfo pageCategoryInfo=new PageCategoryInfo();
-        List<Category> pageCate=categoryService.getListCategoryByPage(pageCategoryInfo,pageNum,sortDir);
+        List<Category> pageCate=categoryService.getListCategoryByPage(pageCategoryInfo,pageNum,sortDir,keyword);
 
         String reverseSortDir= sortDir.equals("asc") ? "desc" : "asc";
 

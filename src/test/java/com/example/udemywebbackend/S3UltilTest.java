@@ -1,19 +1,18 @@
 package com.example.udemywebbackend;
 
-import com.example.udemywebbackend.admin.Upload.AWS.AmazoneS3Util;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
+
+import com.example.udemywebbackend.admin.Upload.AWS.AmazoneS3Util;
 
 public class S3UltilTest {
 
     @Test
     public void testListFolder(){
-        String folderName="test/class.png";
     }
 
     @Test
@@ -26,6 +25,6 @@ public class S3UltilTest {
         System.out.println(ext1);
         InputStream inputStream=new FileInputStream(filePath);
 
-//        AmazoneS3Util.uploadFile(folderName,fileName,inputStream);
+       AmazoneS3Util.uploadFile(folderName,fileName,inputStream);
     }
 }

@@ -97,7 +97,7 @@
         <br>
         <br>
         <div>
-            <h1 class="text-center">UPDATE NEW CATEGORY</h1>
+            <h1 class="text-center">UPDATE CATEGORY</h1>
         </div>
 
         <br>
@@ -114,7 +114,7 @@
                     <div class="col-sm-8">
                         <input type="file" id="fileImage" name="fileImage" accept="image/png, image/jpeg"
                             class="mb-2" />
-                        <img id="thumbnail" alt="Photo Preview" th:src="@{${cate.getPhotoImagePath}}" class="img-fluid"
+                        <img id="thumbnail" alt="Photo Preview" th:src="@{${cate.PhotoImagePath}}" class="img-fluid"
                             width="100px" height="100px">
                     </div>
                 </div>
@@ -219,7 +219,7 @@
 
             name = $("#name").val();
             alias = $("#alias").val();
-            id - $("#id").val();
+            id =$("#id").val();
             csrfValue = $("input[name='_csrf']").val();
             // params={id:userId, email: userEmail, _csrf: csrfValue};
             params = { name: name, _csrf: csrfValue, alias: alias, id: id };

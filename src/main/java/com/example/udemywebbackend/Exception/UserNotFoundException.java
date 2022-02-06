@@ -1,4 +1,4 @@
-package com.example.udemywebbackend.admin.Exception;
+package com.example.udemywebbackend.Exception;
 
 public class UserNotFoundException extends Exception{
 

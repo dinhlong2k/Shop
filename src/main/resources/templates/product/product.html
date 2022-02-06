@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" ;charset="UTF-8">
+    <meta name="viewport" content="width=device-width",initial-scale="1.0",minimum-scale="1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <title>Category Page</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div>
+        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+            <input type="submit" />
+        </form>
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavBar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Home</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAuthority('Admin')">
+                        <a class="nav-link" th:href="@{/usermanager}">Users</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Editor')">
+                        <a class="nav-link" th:href="@{/categoriesmanager}">Categories</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Editor')">
+                        <a class="nav-link" th:href="@{/brands}">Brands</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Editor','Sale','Shipper')">
+                        <a class="nav-link" th:href="@{/product}">Product</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Assistant')">
+                        <a class="nav-link" th:href="@{/question}">Question</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Assistant')">
+                        <a class="nav-link" th:href="@{/review}">Reviews</a>
+                    </li>
+
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Sale')">
+                        <a class="nav-link" th:href="@{/customer}">Customer</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Sale')">
+                        <a class="nav-link" th:href="@{/shipping}">Shipping</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Sale')">
+                        <a class="nav-link" th:href="@{/sale}">Sale Report</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Sale','Shipper')">
+                        <a class="nav-link" th:href="@{/order}">Orders</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Editor')">
+                        <a class="nav-link" th:href="@{/articale}">Articles</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Editor')">
+                        <a class="nav-link" th:href="@{/menu}">Menus</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('Admin')">
+                        <a class="nav-link" th:href="@{/setting}">Settings</a>
+                    </li>
+                    <li>
+                        <span class="far fa-user-circle fa-2x"></span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" sec:authentication="principal.fullName"></a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" th:href="@{/account}">Account</a>
+                            <a class="dropdown-item" id="logoutLink" href="">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
+        </nav>
+    </div>
+
+    <div>
+        <h1>Shop Control Panel</h1>
+    </div>
+
+    <button type="button" class="btn btn-outline-secondary" >
+        <a th:href="@{/product/newProduct}">Create Product</a>
+    </button>
+    <br>
+
+    <div th:if="${message !=null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+
+    <div th:if="${message1 !=null}" class="alert alert-danger text-center">
+        [[${message1}]]
+    </div>
+
+    <div style="align-items: center; justify-content: center;display: flex">
+        <form th:action="@{/categoriesmanager/page/1}" class="form-inline m-3">
+            <input type="hidden" name="sortField" th:value="${sortField}">
+            <input type="hidden" name="sortDir" th:value="${sortDir}">
+            Filter:&nbsp;
+            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required />
+            &nbsp; &nbsp;
+            <input type="submit" value="Search" class="btn btn-primary">&nbsp;
+            <input type="button" value="Clear" class="btn btn-secondary" onclick="clearFilter()"/>
+        </form>
+    </div>
+
+    <div class="container-fluid">
+        <table class="table table-bordered table-striped table-hover table-responsive-lg">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Main Image</th>
+                <th>Product Name</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Enabled</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${listProduct}">
+                <td><h5>[[${product.id}]]</h5></td>
+                <td class="icon">
+                    <img th:src="@{${product.photoImagePath}}" style="width: 120px" class="img-fluid">
+                </td>
+                <td><h5>[[${product.name}]]</h5></td>
+                <td>[[${product.brands.name}]]</td>
+                <td>[[${product.category.name}]]</td>
+                <td class="icon">
+                    <a th:if="${product.enabled ==true} " class="bi bi-toggle2-on fa-2x" style="color: green"
+                       th:href="@{'/product/enabled/' + ${product.id} + '/false' }"></a>
+                    <a th:if="${product.enabled ==false}" class="bi bi-toggle2-off fa-2x" style="color: gray"
+                       th:href="@{'/product/enabled/' + ${product.id} + '/true' }"></a>
+                </td>
+                <td>
+                    <a class="fas fa-file-alt fa-2x icon-green"
+                        th:href="@{'/product/detail/' + ${product.id}}">
+
+                    </a>
+                    <a class="bi bi-pencil-square fa-2x icon-dark"
+                       th:href="@{'/product/delete/' + ${product.id}}"></a>
+                    <a class="bi bi-trash fa-2x icon-dark link-delete"
+                        th:href="@{'/product/delete/' +${product.id}}"
+                        th:userId="${product.id}"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center m-1" th:unless="${totalItems > 0}">
+        <span>No user found</span>
+    </div>
+
+    <div class="text-center m-1" th:if="${totalItems > 0}">
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:if="${currentPage !=  1}">
+                    <a class="page-link"
+                       th:href="@{'/categoriesmanager/page/1?sortField=' +${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">First
+                        Page</a>
+                </li>
+                <ul class="pagination">
+                    <li class="page-item" id="previous" th:if="${currentPage >1}">
+                        <a class="page-link"
+                           th:href="@{'/categoriesmanager/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                        th:each="i : ${#numbers.sequence(1,totalPage)}">
+                        <a class="page-link"
+                           th:href="@{'/categoriesmanager/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}} ">[[${i}]]</a>
+                    </li>
+                    <li class="page-item" id="next" th:if="${currentPage < totalPage && currentPage >0}">
+                        <a class="page-link"
+                           th:href="@{'/categoriesmanager/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:if="${currentPage !=  totalPage}">
+                        <a class="page-link"
+                           th:href="@{'/categoriesmanager/page/' + ${totalPage} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">Last
+                            Page</a>
+                    </li>
+                </ul>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="modal fade text-center" id="confirmModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <span id="confirmText"></span>
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-success" href="" id="yesButton">Yes</a>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function (){
+
+        $(".link-delete").on("click",function (e){
+            e.preventDefault();
+            link=$(this);
+            $("#yesButton").attr("href", link.attr("href"));
+            $("#confirmText").text("Are you sure you want to delete this ID ");
+            $("#confirmModal").modal();
+        });
+
+        $("#logoutLink").on("click",function (e){
+            e.preventDefault();
+            document.logoutForm.submit();
+        });
+    });
+</script>
+
+</body>
+</html>

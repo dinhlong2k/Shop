@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.example.udemywebbackend.admin.Exception.CategoryNotFoundException;
+import com.example.udemywebbackend.Exception.CategoryNotFoundException;
 
 @Service
 @Transactional
@@ -26,7 +26,7 @@ public class CategoryServiceImp implements CategoryService{
     private CategoriesRepository cateRepo;
 
     @Override
-    public List<Category> getListCategoryByPage(PageCategoryInfo info,int  pageNumber, String sortDir) {
+    public List<Category> getListCategoryByPage(PageCategoryInfo info,int  pageNumber, String sortDir,String keyword) {
 
         Sort sort=Sort.by("name");
         if(sortDir.equals("asc")) sort=sort.ascending();
@@ -34,13 +34,26 @@ public class CategoryServiceImp implements CategoryService{
 
         Pageable pageable=PageRequest.of(pageNumber-1, CATE_BY_PAGE, sort);
 
-        Page<Category> pagesCategory=cateRepo.findRootCategory(pageable); //sort root category voi ten name 
-        List<Category> rootCategory =pagesCategory.getContent();
+        Page<Category> pageCategories =null;
+        if( keyword !=null){
+            pageCategories=cateRepo.searchCategory(keyword, pageable);
+        }else{
+            pageCategories=cateRepo.findRootCategory(pageable);
+        }
 
-        info.setTotalElements(pagesCategory.getTotalElements());
-        info.setTotalPages(pagesCategory.getTotalPages());
+        List<Category> rootCategory =pageCategories.getContent();
 
-        return listHierarchicalCategories(rootCategory, sortDir);
+        info.setTotalElements(pageCategories.getTotalElements());
+        info.setTotalPages(pageCategories.getTotalPages());
+
+        if(keyword != null && !keyword.isEmpty()){
+            List<Category> searchResult= pageCategories.getContent();
+            for(Category category: searchResult){
+                category.setHasChildren(category.getChildern().size() >0);
+            }
+
+            return searchResult;
+        }else return listHierarchicalCategories(rootCategory, sortDir);
         
     }
     
@@ -208,14 +221,12 @@ public class CategoryServiceImp implements CategoryService{
 
     @Override
     public void UpdateStatusCategory(boolean status, int id) {
-        // TODO Auto-generated method stub
         
         cateRepo.updateStatus(id, status);;
     }
 
     @Override
     public void deleteCategory(int id) throws CategoryNotFoundException {
-        // TODO Auto-generated method stub
         Long countById = cateRepo.countById(id);
 
         if (countById == null || countById == 0) {

@@ -1,6 +1,6 @@
 package com.example.udemywebbackend.admin.User;
 
-import com.example.udemywebbackend.admin.Exception.UserNotFoundException;
+import com.example.udemywebbackend.Exception.UserNotFoundException;
 import com.example.udemywebbackend.admin.Security.UserPrincipal;
 import com.example.udemywebbackend.admin.Upload.AWS.AmazoneS3Util;
 

@@ -1,6 +1,6 @@
 package com.example.udemywebbackend.admin.User;
 
-import com.example.udemywebbackend.admin.Exception.UserNotFoundException;
+import com.example.udemywebbackend.Exception.UserNotFoundException;
 import com.example.udemywebbackend.admin.Role.Role;
 import org.springframework.data.domain.Page;
 import java.util.Set;

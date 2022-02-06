@@ -21,7 +21,7 @@ public class RoleRepositoryTest {
     @Test
     public void testCreateRole(){
         Role roleAdmin=new Role("Admin","Manage Anything");
-        Role savedRole=repo.save(roleAdmin);
+        repo.save(roleAdmin);
     }
 
     @Test
