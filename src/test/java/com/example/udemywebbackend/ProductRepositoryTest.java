@@ -1,6 +1,7 @@
 package com.example.udemywebbackend;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.example.udemywebbackend.brands.Brands;
 import com.example.udemywebbackend.categories.Category;
@@ -120,6 +121,22 @@ public class ProductRepositoryTest {
         Iterable<ProductImage> productImage=product.getImages();
         for(ProductImage product2: productImage){
             System.out.println(product2.getName());
+        }
+    }
+
+    @Test
+    public void testGetImageProduct(){
+        Product product=new Product();
+
+        product.setMainImage("mainImage.jpg");
+        product.addExtraImage("extra1.png");
+        product.addExtraImage("extra2.png");
+        product.addExtraImage("extra3.png");
+
+        Set<ProductImage> productImage=product.getImages();
+
+        for(ProductImage productImages: productImage){
+            System.out.println(productImages.getName());
         }
     }
 }

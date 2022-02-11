@@ -1,3 +1,4 @@
+    var extraImageCount=0;
     dropdownBrands =$("#brands");
     dropdownCategories=$("#category");
 
@@ -33,8 +34,9 @@
         });
 
         $("input[name='extraImage']").each(function(index){
+            extraImageCount++;
             $(this).change(function(){
-                showExtraImage(this);
+                showExtraImage(this,index);
             });
         });
 
@@ -58,15 +60,17 @@
         };
         reader.readAsDataURL(file);
 
-        addExtraImageSection(index +1);
+        if(index>= extraImageCount -1){
+            addExtraImageSection(index +1);
+        }
     }
 
     function addExtraImageSection(index){
         html =`
-        <div class="col border m-3 p2">
-            <div><label>Extra image #${index +1}: </label></div>
+        <div class="col border m-3 p2" id="divExtraImage${index}">
+            <div id="extraImageHeader${index}"><label>Extra image #${index +1}: </label></div>
             <div class="m-2">
-                <img id="extraThumbnail${index +1}" alt="Extra image preview" class="img-fluid" src="${defaultImageThumbnailSrc}" width="250px" height="250px">
+                <img id="extraThumbnail${index}" alt="Extra image preview" class="img-fluid" src="${defaultImageThumbnailSrc}" width="250px" height="250px">
             </div>
             <div>
                 <input type="file" name="extraImage"
@@ -76,7 +80,21 @@
         </div>
         `;
 
+        htmlLinkRemove=`
+            <a class="btn fas fa-times-circle fa-2x icon-dark float-right"
+            href="javascript:removeExtraImage(${index-1})"></a>
+        `;
+
         $("#divProductImages").append(html);
+
+        $("#extraImageHeader" + (index -1)).append(htmlLinkRemove);
+
+        extraImageCount++;
+    }
+
+    function removeExtraImage(index){
+        $("#divExtraImage" +index).remove();
+        extraImageCount --;
     }
 
     function getCategories(){
@@ -94,10 +112,10 @@
     function checkName(form){
         url ="[[@{/product/checkUniqueNew}]]";
 
-        name =$("#name").val();
+        nameProduct =$("#name").val();
         csrfValue =$("input[name='_csrf']").val();
         // params={id:userId, email: userEmail, _csrf: csrfValue};
-        params={ name: name, _csrf: csrfValue};
+        params={ name: nameProduct, _csrf: csrfValue};
 
         $("#modalDialog").modal();
 

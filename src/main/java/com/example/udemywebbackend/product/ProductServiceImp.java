@@ -40,7 +40,8 @@ public class ProductServiceImp implements ProductService{
     @Override
     public void updateProduct(Product product) {
         // TODO Auto-generated method stub
-        
+        Product productUpdate=repoProduct.findById(product.getId()).get();
+
     }
 
     @Override
@@ -76,5 +77,16 @@ public class ProductServiceImp implements ProductService{
 
         repoProduct.deleteById(id);
         
+    }
+
+    @Override
+    public void updateProductImage(Product product) {
+        // TODO Auto-generated method stub
+        Product productUpdate=repoProduct.findById(product.getId()).get();
+
+        productUpdate.setMainImage(product.getMainImage());
+        productUpdate.setImages(product.getImages());
+
+        repoProduct.save(productUpdate);
     }
 }

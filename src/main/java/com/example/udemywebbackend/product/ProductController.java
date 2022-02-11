@@ -1,11 +1,7 @@
 package com.example.udemywebbackend.product;
 
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
-import java.util.NoSuchElementException;
-
-import com.amazonaws.services.s3.AmazonS3;
 import com.example.udemywebbackend.Exception.ProductNotFoundException;
 import com.example.udemywebbackend.admin.Upload.AWS.AmazoneS3Util;
 import com.example.udemywebbackend.brands.Brands;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,22 +51,19 @@ public class ProductController {
     }
 
     @PostMapping("/product/saveProduct")
-    public String saveproduct(RedirectAttributes redirectAttributes,@ModelAttribute("product") Product product,@RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
+    public String saveproduct(RedirectAttributes redirectAttributes,@ModelAttribute("product") Product product,
+                            @RequestParam("fileImage") MultipartFile multipartFile,
+                            @RequestParam("extraImage") MultipartFile[] exMultipartFiles) throws IOException {
 
         boolean checkName=productService.checkNameProduct(product.getName(), null);
 
         if(checkName){
-            if(!multipartFile.isEmpty()){
+            product.setMainImage("hello.png");
+            Product savedProduct=productService.saveProduct(product);
 
-                String fileName=AmazoneS3Util.generateFileName(multipartFile.getOriginalFilename(), "product");
-                product.setMainImage(fileName);
-                Product savedProduct=productService.saveProduct(product);
-                String uploadDir="product-images/" +savedProduct.getId();
-                AmazoneS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
-                redirectAttributes.addFlashAttribute("message", "The product have been save successfully");
-            }else{
-                productService.saveProduct(product);
-            }
+            saveImageProduct(exMultipartFiles, multipartFile, savedProduct);
+            redirectAttributes.addFlashAttribute("message", "The product have been saved successfully");
+
         }else{
             redirectAttributes.addFlashAttribute("message1", "The name used in another product");
         }
@@ -79,6 +71,35 @@ public class ProductController {
         return "redirect:/product";
     }
     
+    private void saveImageProduct(MultipartFile[] exMultipartFiles,MultipartFile multipartFile,Product product) throws IOException{
+
+        if(!multipartFile.isEmpty()){
+            String fileName=AmazoneS3Util.generateFileName(multipartFile.getOriginalFilename(), "product");
+
+            product.setMainImage(fileName);
+
+            String uploadDir="product-images/" +product.getId();
+
+            AmazoneS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+        }
+
+        if(exMultipartFiles.length >0 ){
+            String uploadDir ="product-images/" +product.getId() + "/extras";
+            for(MultipartFile multipartFiles: exMultipartFiles){
+
+                if(multipartFiles.isEmpty()) continue;
+
+                String fileName=AmazoneS3Util.generateFileName(multipartFiles.getOriginalFilename(), "product");
+
+                product.addExtraImage(fileName);
+
+                AmazoneS3Util.uploadFile(uploadDir, fileName, multipartFiles.getInputStream());
+            }
+        }
+
+        productService.updateProductImage(product);
+    }
+
     @GetMapping(value="/product/enabled/{id}/{status}")
     public String updateStatusProduct(@PathVariable("id") int id,@PathVariable("status") boolean status,RedirectAttributes redirectAttributes) {
         productService.updateStatus(id, status);
@@ -90,6 +111,9 @@ public class ProductController {
     @GetMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable("id") int id, RedirectAttributes redirectAttributes){
         try {
+            String uploadDir="product-images/" + id + "/extras";
+            AmazoneS3Util.removeFolder(uploadDir);
+
             productService.deleteProduct(id);
 
             redirectAttributes.addFlashAttribute("message", "Product has been deleted successfully");

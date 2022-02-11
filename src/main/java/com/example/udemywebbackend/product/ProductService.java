@@ -11,5 +11,6 @@ public interface ProductService {
     Product getProductById(int id);
     boolean checkNameProduct(String name,Integer id);
     void updateStatus(int id,boolean status);
+    void updateProductImage(Product product);
     void deleteProduct(int id) throws ProductNotFoundException;
 }
