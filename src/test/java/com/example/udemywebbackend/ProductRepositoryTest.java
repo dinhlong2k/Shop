@@ -139,4 +139,16 @@ public class ProductRepositoryTest {
             System.out.println(productImages.getName());
         }
     }
+
+    @Test
+    public void testSaveProductWithDetails(){
+        Integer productId=1;
+
+        Product product=productRepo.findById(productId).get();
+
+        product.addDetailProduct("Device Memory","128GB");
+        product.addDetailProduct("OS", "Android 10");
+
+        productRepo.save(product);
+    }
 }

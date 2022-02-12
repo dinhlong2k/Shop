@@ -1,7 +1,9 @@
 package com.example.udemywebbackend.product;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -83,8 +85,15 @@ public class Product {
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private Set<ProductImage> images=new HashSet<>();
 
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    private List<ProductDetail> productDetails=new ArrayList<>();
+
     public void addExtraImage(String imageName){
         this.images.add(new ProductImage(imageName,this));
+    }
+
+    public void addDetailProduct(String name, String value){
+        this.productDetails.add(new ProductDetail(name,value));
     }
 
     @Transient
