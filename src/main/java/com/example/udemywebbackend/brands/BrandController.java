@@ -10,6 +10,7 @@ import com.example.udemywebbackend.categories.CategoryService;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,12 @@ public class BrandController {
         modelMap.addAttribute("listbrand", listBrand);
 
         return "brands/brand";
+    }
+
+    @GetMapping("/brands/page/{pageNum}")
+    public String brandByPage(ModelMap modelMap,@PathVariable("pageNum") int pageNum
+                                ,@Param("sortField") String sortField, @Param("sortDir") String sortDir){
+                                    
     }
 
     @GetMapping("/brands/newBrand")

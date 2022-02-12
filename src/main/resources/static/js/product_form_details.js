@@ -15,17 +15,18 @@ function addNextDetailSection(){
     $("#divProductDetails").append(htmlDetailSection);
 
     previousDivDetailSection =allDivDetails.last();
-    previousDivDetailSection = previousDivDetailSection.attr("id");
+    previousDivDetailID  = previousDivDetailSection.attr("id");
     
     htmlLinkRemove=`
         <a class="btn fas fa-times-circle fa-2x icon-dark"
-        href="javascript:removeDetailSectionById('${previousDivDetailSection}')"></a>
+        href="javascript:removeDetailSectionById('${previousDivDetailID}')"></a>
     `;
     
+    $("input[name='detailNames']").last().focus(); // khi them 1 detail moi thi con tro se chay den phan input detail moi
+
     previousDivDetailSection.append(htmlLinkRemove);
 }
 
 function removeDetailSectionById(id){
-    alert(id);
     $("#" +id).remove();
 }

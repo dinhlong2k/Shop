@@ -172,13 +172,13 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:if="${currentPage !=  1}">
                     <a class="page-link"
-                       th:href="@{'/categoriesmanager/page/1?sortField=' +${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">First
+                       th:href="@{'/brands/page/1?sortField=' +${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">First
                         Page</a>
                 </li>
                 <ul class="pagination">
                     <li class="page-item" id="previous" th:if="${currentPage >1}">
                         <a class="page-link"
-                           th:href="@{'/categoriesmanager/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}"
+                           th:href="@{'/brands/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                             <span class="sr-only">Previous</span>
@@ -187,11 +187,11 @@
                     <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
                         th:each="i : ${#numbers.sequence(1,totalPage)}">
                         <a class="page-link"
-                           th:href="@{'/categoriesmanager/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}} ">[[${i}]]</a>
+                           th:href="@{'/brands/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}} ">[[${i}]]</a>
                     </li>
                     <li class="page-item" id="next" th:if="${currentPage < totalPage && currentPage >0}">
                         <a class="page-link"
-                           th:href="@{'/categoriesmanager/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}"
+                           th:href="@{'/brands/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}"
                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                             <span class="sr-only">Next</span>
@@ -199,7 +199,7 @@
                     </li>
                     <li class="page-item" th:if="${currentPage !=  totalPage}">
                         <a class="page-link"
-                           th:href="@{'/categoriesmanager/page/' + ${totalPage} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">Last
+                           th:href="@{'/brands/page/' + ${totalPage} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir}+ ${keyword != null ? '&keyword=' + keyword : ''}}">Last
                             Page</a>
                     </li>
                 </ul>
