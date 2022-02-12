@@ -134,7 +134,12 @@
                 <div class="tab-pane p-3" id="images" role="tabpanel" aria-labelledby="messages-tab">
                     <div th:replace="product/product_images :: content"></div>
                 </div>
-                <div class="tab-pane p-3" id="details" role="tabpanel" aria-labelledby="settings-tab">Details</div>
+                <div class="tab-pane p-3" id="details" role="tabpanel" aria-labelledby="settings-tab">
+                    <div>
+                        <input type="button" class="btn btn-secondary" value="Add more details" onclick="addNextDetailSection()"/>
+                    </div>
+                    <div th:replace="product/product_details :: content"></div>
+                </div>
                 <div class="tab-pane p-3" id="shipping" role="tabpanel" aria-labelledby="settings-tab">
                     <div th:replace="product/product_shipping :: content"></div>
                 </div>
@@ -173,18 +178,6 @@
     brandsmoduleURL="[[@{/brands}]]";
     defaultImageThumbnailSrc= "[[@{/images/thumbCate.png}]]";
 
-    function getCategories(){
-        brandId=dropdownBrands.val();
-
-        url=brandsmoduleURL + "/" + brandId +"/categories";
-
-        $.get(url,function(responJson){
-            $.each(responJson, function (index, category) { 
-                $("<option>").val(category.id).text(category.name).appendTo(dropdownCategories);
-            });
-        });
-    }
-
     function checkName(form){
         url ="[[@{/product/checkUniqueNew}]]";
 
@@ -216,6 +209,8 @@
     }
 
 </script>
-<script th:src="@{/js/product_form.js}"></script>
+<script th:src="@{/js/product_form_overview.js}"></script>
+<script th:src="@{/js/product_form_images.js}"></script>
+<script th:src="@{/js/product_form_details.js}"></script>
 </body>
 </html>
