@@ -6,6 +6,10 @@ import java.util.NoSuchElementException;
 import com.example.udemywebbackend.Exception.BrandNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,6 +81,21 @@ public class BrandsServiceImp implements BrandsService{
 		}
 		
 		brandRepo.deleteById(id);
+    }
+
+    @Override
+    public Page<Brands> listBrandByPage(int pageNum, String sortDir, String sortField, String keyword) {
+        Sort sort=Sort.by(sortField);
+
+        sort=sortDir.equals("asc") ?sort.ascending()  : sort.descending();
+        Pageable pageable= PageRequest.of(pageNum-1,USER_BY_PAGE,sort);
+
+
+        if(keyword == null){
+            return brandRepo.findAll(pageable);
+        }else{
+            return brandRepo.findBrandSearch(keyword,pageable);
+        }
     }
     
 }

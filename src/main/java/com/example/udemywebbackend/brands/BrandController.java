@@ -10,6 +10,7 @@ import com.example.udemywebbackend.categories.CategoryService;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,17 +34,37 @@ public class BrandController {
     @GetMapping("/brands")
     public String brandPage(ModelMap modelMap){
 
-        List<Brands> listBrand=brandsService.getListBrand();
-
-        modelMap.addAttribute("listbrand", listBrand);
-
-        return "brands/brand";
+       return brandByPage(modelMap, 1, "id", "asc",null);
     }
 
     @GetMapping("/brands/page/{pageNum}")
     public String brandByPage(ModelMap modelMap,@PathVariable("pageNum") int pageNum
-                                ,@Param("sortField") String sortField, @Param("sortDir") String sortDir){
-                                    
+                                ,@Param("sortField") String sortField, @Param("sortDir") String sortDir
+                                ,@Param("keyword") String keyword){
+        Page<Brands> pageBrands= brandsService.listBrandByPage(pageNum,sortDir,sortField,keyword);        
+        
+        List<Brands> listbrand=pageBrands.getContent();
+
+        long startCount= (pageNum-1) * BrandsService.USER_BY_PAGE +1;
+        long endCount =startCount +BrandsService.USER_BY_PAGE -1;
+        if(endCount >pageBrands.getTotalElements()){
+            endCount =pageBrands.getTotalElements();
+        }
+
+        String reverseSortDir= sortDir.equals("asc") ? "desc" : "asc";
+
+        modelMap.addAttribute("keyword",keyword);
+        modelMap.addAttribute("sortField",sortField);
+        modelMap.addAttribute("sortDir",sortDir);
+        modelMap.addAttribute("currentPage",pageNum);
+        modelMap.addAttribute("totalPage" ,pageBrands.getTotalPages());
+        modelMap.addAttribute("startCount",startCount);
+        modelMap.addAttribute("endCount",endCount);
+        modelMap.addAttribute("reverseSortDir",reverseSortDir);
+        modelMap.addAttribute("totalElement",pageBrands.getTotalElements());
+        modelMap.addAttribute("listbrand",listbrand);
+
+        return "brands/brand";
     }
 
     @GetMapping("/brands/newBrand")

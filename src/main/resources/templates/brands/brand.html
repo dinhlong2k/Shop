@@ -108,7 +108,7 @@
     </div>
 
     <div style="align-items: center; justify-content: center;display: flex">
-        <form th:action="@{/categoriesmanager/page/1}" class="form-inline m-3">
+        <form th:action="@{/brands/page/1}" class="form-inline m-3">
             <input type="hidden" name="sortField" th:value="${sortField}">
             <input type="hidden" name="sortDir" th:value="${sortDir}">
             Filter:&nbsp;
@@ -124,11 +124,27 @@
             <thead class="thead-dark">
             <tr>
                 <th>
-                    ID
+                    <a th:if="${sortField != 'id'}" class="text-white"
+                       th:href="@{'/brands/page/' + ${currentPage} + '?sortField=id&sortDir=' +${sortDir}}">
+                        ID
+                    </a>
+                    <a th:if="${sortField == 'id'}" class="text-white"
+                       th:href="@{'/brands/page/' + ${currentPage} + '?sortField=id&sortDir=' +${reverseSortDir}}">
+                       ID
+                    </a>
+                    <span th:if="${sortField == 'id'}" th:class="${sortDir =='asc' ? 'bi bi-sort-alpha-up' : 'bi bi-sort-alpha-down'}"></span>
                 </th>
                 <th>Logo</th>
                 <th>
-                    Name
+                    <a th:if="${sortField != 'name'}" class="text-white"
+                       th:href="@{'/brands/page/' + ${currentPage} + '?sortField=name&sortDir=' +${sortDir}}">
+                        Name
+                    </a>
+                    <a th:if="${sortField == 'name'}" class="text-white"
+                       th:href="@{'/brands/page/' + ${currentPage} + '?sortField=name&sortDir=' +${reverseSortDir}}">
+                       Name
+                    </a>
+                    <span th:if="${sortField == 'name'}" th:class="${sortDir =='asc' ? 'bi bi-sort-alpha-up' : 'bi bi-sort-alpha-down'}"></span>
                 </th>
                 <th>
                     Categories
@@ -162,11 +178,11 @@
         </table>
     </div>
 
-    <div class="text-center m-1" th:unless="${totalItems > 0}">
+    <div class="text-center m-1" th:unless="${totalPage > 0}">
         <span>No user found</span>
     </div>
 
-    <div class="text-center m-1" th:if="${totalItems > 0}">
+    <div class="text-center m-1" th:if="${totalPage > 0}">
 
         <nav>
             <ul class="pagination justify-content-center">

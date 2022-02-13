@@ -12,6 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,5 +126,22 @@ public class BrandsRepositoryTest {
         int id=1;
 
         repoBrand.deleteById(id);
+    }
+
+    @Test
+    public void getListBrandByPage(){
+        String sortField="id";
+        String sortDir="asc";
+        int pageNum=1;
+        Sort sort=Sort.by(sortField);
+
+        sort=sortDir.equals("asc") ?sort.ascending()  : sort.descending();
+        Pageable pageable= PageRequest.of(pageNum-1,5,sort);
+        Page<Brands> pageBrands= repoBrand.findBrandSearch("can",pageable);
+        
+        List<Brands> listbrand=pageBrands.getContent();
+        for(Brands brands: listbrand){
+            System.out.println(brands.getName());
+        }
     }
 }
