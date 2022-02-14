@@ -31,9 +31,10 @@ public class ProductDetail {
     public ProductDetail() {
     }
 
-    public ProductDetail(String name,String value){
+    public ProductDetail(String name,String value,Product product){
         this.name=name;
         this.value=value;
+        this.product=product;
     }
 
     public int getId() {

@@ -93,7 +93,7 @@ public class Product {
     }
 
     public void addDetailProduct(String name, String value){
-        this.productDetails.add(new ProductDetail(name,value));
+        this.productDetails.add(new ProductDetail(name,value,this));
     }
 
     @Transient

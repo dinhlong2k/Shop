@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import lombok.val;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,11 +56,15 @@ public class ProductController {
     @PostMapping("/product/saveProduct")
     public String saveproduct(RedirectAttributes redirectAttributes,@ModelAttribute("product") Product product,
                             @RequestParam("fileImage") MultipartFile multipartFile,
-                            @RequestParam("extraImage") MultipartFile[] exMultipartFiles) throws IOException {
+                            @RequestParam("extraImage") MultipartFile[] exMultipartFiles,
+                            @RequestParam(name = "detailNames",required = false) String[] detailNames,
+                            @RequestParam(name = "detailValues",required = false) String[] detailValues                            
+                            ) throws IOException {
 
         boolean checkName=productService.checkNameProduct(product.getName(), null);
 
         if(checkName){
+            setProductDetails(detailNames,detailValues,product);
             product.setMainImage("hello.png");
             Product savedProduct=productService.saveProduct(product);
 
@@ -71,6 +78,21 @@ public class ProductController {
         return "redirect:/product";
     }
     
+    private void setProductDetails(String[] detailNames, String[] detailValues, Product product) {
+        if(detailNames== null || detailNames.length==0) return;
+        else{
+            for(int i=0;i<detailNames.length;i++){
+                String name=detailNames[i];
+                String value=detailValues[i];
+                
+                if(!name.isEmpty() && !value.isEmpty()){
+                    product.addDetailProduct(name, value);
+                }
+
+            }
+        }
+    }
+
     private void saveImageProduct(MultipartFile[] exMultipartFiles,MultipartFile multipartFile,Product product) throws IOException{
 
         if(!multipartFile.isEmpty()){
