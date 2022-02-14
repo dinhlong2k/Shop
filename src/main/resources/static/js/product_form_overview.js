@@ -6,15 +6,6 @@ $(document).ready(function (){
 
     $("#shortDescription").richText();
     $("#longDescription").richText();
-    
-    $("#buttonCancel").on("click",function(){
-        window.location ="[[@{/product}]]";
-    });
-
-    $("#logoutLink").on("click",function (e){
-        e.preventDefault();
-        document.logoutForm.submit();
-    });
 
     $("#brands").change(function(){
         dropdownCategories.empty();

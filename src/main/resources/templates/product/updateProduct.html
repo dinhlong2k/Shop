@@ -174,20 +174,20 @@
     </div>
 
 <script type="text/javascript">
-    moduleURL="[[@{/products}]]";
-    brandsmoduleURL="[[@{/brands}]]";
-    defaultImageThumbnailSrc= "[[@{/images/thumbCate.png}]]";
-
     $(document).ready(function () {
         $("#buttonCancel").on("click", function () {
-                window.location = "[[@{/product}]]";
+                window.location = "[[@{/categoriesmanager}]]";
         });
 
         $("#logoutLink").on("click", function (e) {
             e.preventDefault();
             document.logoutForm.submit();
         });
-    });
+        });
+
+    moduleURL="[[@{/products}]]";
+    brandsmoduleURL="[[@{/brands}]]";
+    defaultImageThumbnailSrc= "[[@{/images/thumbCate.png}]]";
 
     function checkName(form){
         url ="[[@{/product/checkUniqueNew}]]";

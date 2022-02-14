@@ -8,7 +8,7 @@ public interface ProductService {
     List<Product> getListProduct();
     Product saveProduct(Product product);
     void updateProduct(Product product);
-    Product getProductById(int id);
+    Product getProductById(int id) throws ProductNotFoundException;
     boolean checkNameProduct(String name,Integer id);
     void updateStatus(int id,boolean status);
     void updateProductImage(Product product);

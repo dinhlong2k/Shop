@@ -122,6 +122,24 @@ public class ProductController {
         productService.updateProductImage(product);
     }
 
+    @GetMapping(value = "/product/update/{id}" )
+    public String getProduct(@PathVariable("id") int id, RedirectAttributes redirectAttributes, ModelMap modelMap){
+        try{
+            Product product=productService.getProductById(id);
+
+            List<Brands> listBrand=brandRepo.findAllIdAndNameASC();
+
+            modelMap.addAttribute("listBrand", listBrand);
+            modelMap.addAttribute("product", product);
+
+            return "product/updateProduct";
+        }catch(ProductNotFoundException px){
+            redirectAttributes.addFlashAttribute("message1", px.getMessage());
+
+            return "redirect:/product";
+        }
+    }
+
     @GetMapping(value="/product/enabled/{id}/{status}")
     public String updateStatusProduct(@PathVariable("id") int id,@PathVariable("status") boolean status,RedirectAttributes redirectAttributes) {
         productService.updateStatus(id, status);

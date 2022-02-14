@@ -45,9 +45,15 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public Product getProductById(int id) {
+    public Product getProductById(int id) throws ProductNotFoundException {
         // TODO Auto-generated method stub
-        return null;
+        try {
+            Product getProduct=repoProduct.findById(id).get();
+
+            return getProduct;
+        } catch (NoSuchElementException e) {
+            throw new ProductNotFoundException("Can't find any product with ID: " + id);
+        }
     }
 
     @Override
