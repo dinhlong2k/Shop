@@ -101,9 +101,9 @@
             </div>
         <br>
         <br>
-        <form th:action="@{/product/saveProduct}" method="post" th:object="${product}" onsubmit="return checkName(this);"
+        <form th:action="@{/product/updateProduct}" method="post" th:object="${product}" onsubmit="return checkName(this);"
         enctype="multipart/form-data">
-            
+            <input type="hidden" th:field="*{id}"> 
             <div>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
@@ -190,12 +190,13 @@
     defaultImageThumbnailSrc= "[[@{/images/thumbCate.png}]]";
 
     function checkName(form){
-        url ="[[@{/product/checkUniqueNew}]]";
+        url ="[[@{/product/checkUniqueUpdate}]]";
 
         nameProduct =$("#name").val();
+        id =$("#id").val();
         csrfValue =$("input[name='_csrf']").val();
         // params={id:userId, email: userEmail, _csrf: csrfValue};
-        params={ name: nameProduct, _csrf: csrfValue};
+        params={ name: nameProduct, _csrf: csrfValue, id: id};
 
         $("#modalDialog").modal();
 

@@ -3,6 +3,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 public class ProductRestController {
@@ -15,4 +17,12 @@ public class ProductRestController {
 
         return productService.checkNameProduct(name, null) ? "OK" : "Duplicated";
     }
+
+    @PostMapping(value="/product/checkUniqueUpdate")
+    public String postMethodName(@Param("name") String name,@Param("id") Integer id) {
+        //TODO: process POST request
+        
+        return productService.checkNameProduct(name, id) ? "OK" : "Duplicated";
+    }
+    
 }

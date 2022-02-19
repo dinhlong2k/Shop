@@ -42,6 +42,10 @@ public class ProductServiceImp implements ProductService{
         // TODO Auto-generated method stub
         Product productUpdate=repoProduct.findById(product.getId()).get();
 
+        if(product.getImages() != null)     product.setImages(productUpdate.getImages());
+        if(product.getMainImage() != null)  product.setMainImage(productUpdate.getMainImage());
+
+        repoProduct.save(product);
     }
 
     @Override

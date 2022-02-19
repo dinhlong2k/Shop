@@ -140,6 +140,51 @@ public class ProductController {
         }
     }
 
+    @PostMapping("/product/updateProduct")
+    public String updateProduct(@ModelAttribute("product") Product product, RedirectAttributes redirectAttributes,
+                                MultipartFile mainImage,MultipartFile[] extraImage) throws IOException{
+        boolean productFind=productService.checkNameProduct(product.getName(), product.getId());
+        
+        if(productFind){
+            if(!mainImage.isEmpty() && extraImage.length >0){
+                saveImageProduct(extraImage, mainImage, product);
+            }else{
+                if(!mainImage.isEmpty()){
+                    String fileName=AmazoneS3Util.generateFileName(mainImage.getOriginalFilename(), "product");
+
+                    product.setMainImage(fileName);
+
+                    String uploadDir="product-images/" +product.getId();
+
+                    AmazoneS3Util.uploadFile(uploadDir, fileName, mainImage.getInputStream());
+                }else product.setMainImage(null);
+
+                if(extraImage.length >0 ){
+                    String uploadDir ="product-images/" +product.getId() + "/extras";
+                    for(MultipartFile multipartFiles: extraImage){
+        
+                        if(multipartFiles.isEmpty()) continue;
+        
+                        String fileName=AmazoneS3Util.generateFileName(multipartFiles.getOriginalFilename(), "product");
+        
+                        product.addExtraImage(fileName);
+        
+                        AmazoneS3Util.uploadFile(uploadDir, fileName, multipartFiles.getInputStream());
+                    }
+                }else product.addExtraImage(null);
+            }
+            
+            productService.updateProduct(product);
+
+            redirectAttributes.addFlashAttribute("message","The product have been updated successfully");
+            return "product/product";
+        }else{
+            redirectAttributes.addFlashAttribute("message1", "Can not update this product");
+            return "redirect: /product";
+        }
+    
+    }
+
     @GetMapping(value="/product/enabled/{id}/{status}")
     public String updateStatusProduct(@PathVariable("id") int id,@PathVariable("status") boolean status,RedirectAttributes redirectAttributes) {
         productService.updateStatus(id, status);
